@@ -1,0 +1,15 @@
+services:
+  cloudflare-ip-updater:
+    build: 
+      context: .
+      tags:
+        - "tga309/cloudflare-ddns:1.0.0"
+    image: tga309/cloudflare-ddns:1.0.0
+    container_name: cloudflare-ip-updater
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs  # Sync logs between host and container
+    restart: unless-stopped
+    command: >
+      sh -c "while true; do python update_cloudflare_ip.py; sleep 300; done"
